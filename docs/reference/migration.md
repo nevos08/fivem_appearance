@@ -1,9 +1,9 @@
 # Migrating from skinchanger
 
-`nvx_skin` ships **no** compatibility shim. Old calls do not work against it - they have to be rewritten. The data, however, migrates itself.
+`nvx_appearance` ships **no** compatibility shim. Old calls do not work against it - they have to be rewritten. The data, however, migrates itself.
 
 {% hint style="warning" %}
-`nvx_skin` takes over the job of `skinchanger` - applying and reading appearances. It does **not** take over `esx_skin`, which additionally provides the clothing menu and saves to `users.skin`. Coming from an ESX setup you still need your own UI and your own persistence.
+`nvx_appearance` takes over the job of `skinchanger` - applying and reading appearances. It does **not** take over `esx_skin`, which additionally provides the clothing menu and saves to `users.skin`. Coming from an ESX setup you still need your own UI and your own persistence.
 {% endhint %}
 
 ## Data migrates automatically
@@ -21,7 +21,7 @@ So this works without a migration script:
 
 ```lua
 local legacy = json.decode(row.skin)          -- old users.skin, or charcreator output
-exports.nvx_skin:Apply(src, legacy)
+exports.nvx_appearance:Apply(src, legacy)
 ```
 
 The first save writes the modern form back. Migrating the database is optional - you can let it happen as players log in.
@@ -34,12 +34,12 @@ Scale detection is a heuristic: a face feature outside `-1.0…1.0` is assumed t
 
 | Old | New |
 | --- | --- |
-| `TriggerEvent('skinchanger:loadSkin', skin)` | `exports.nvx_skin:Apply(skin)` |
-| `TriggerEvent('skinchanger:getSkin', cb)` | `local skin = exports.nvx_skin:GetAppearance()` |
-| `TriggerEvent('skinchanger:loadClothes', skin, clothes)` | `exports.nvx_skin:SetComponents(components)` |
+| `TriggerEvent('skinchanger:loadSkin', skin)` | `exports.nvx_appearance:Apply(skin)` |
+| `TriggerEvent('skinchanger:getSkin', cb)` | `local skin = exports.nvx_appearance:GetAppearance()` |
+| `TriggerEvent('skinchanger:loadClothes', skin, clothes)` | `exports.nvx_appearance:SetComponents(components)` |
 | `TriggerEvent('skinchanger:change', key, val)` | The matching setter, e.g. `SetComponent` |
-| `exports['skinchanger']:GetSkin()` | `exports.nvx_skin:GetAppearance()` |
-| `TriggerServerEvent('esx_skin:save', skin)` | Your own persistence - `nvx_skin` stores nothing |
+| `exports['skinchanger']:GetSkin()` | `exports.nvx_appearance:GetAppearance()` |
+| `TriggerServerEvent('esx_skin:save', skin)` | Your own persistence - `nvx_appearance` stores nothing |
 
 The callback style is gone. Getters return directly on the client, and on the server they are synchronous while sync is enabled.
 
@@ -72,7 +72,7 @@ The flat skinchanger keys map onto named slots. `_1` was the drawable, `_2` the 
 | `face_md_weight` / `skin_md_weight` | `headBlend.shapeMix` / `skinMix` |
 
 {% hint style="warning" %}
-Watch `torso_1` and `arms`. In skinchanger both refer to component 3, which `nvx_skin` calls `arms`. The name `torso` here is component **11** - the top. Getting these two confused is the usual migration bug.
+Watch `torso_1` and `arms`. In skinchanger both refer to component 3, which `nvx_appearance` calls `arms`. The name `torso` here is component **11** - the top. Getting these two confused is the usual migration bug.
 {% endhint %}
 
 ## What you gain

@@ -1,9 +1,9 @@
-Skin = Skin or {}
+Appearance = Appearance or {}
 
-local const = Skin.const
+local const = Appearance.const
 
 local hair = {}
-Skin.hair = hair
+Appearance.hair = hair
 
 --- The hair fade / dip is not part of the hair component - it is a ped
 --- decoration on the torso. That means it shares a slot with the tattoos and
@@ -16,7 +16,7 @@ function hair.resolveFade(model, hairData)
     if type(hairData.fade) == "table" then return hairData.fade end
 
     -- No explicit fade: fall back to the style's default from the lookup table.
-    local sex = Skin.schema.sexOf(model)
+    local sex = Appearance.schema.sexOf(model)
     if not sex then return nil end
 
     local entry = const.HAIR_DECORATIONS[sex] and const.HAIR_DECORATIONS[sex][hairData.drawable]
@@ -47,11 +47,11 @@ function hair.validate(ped, hairData)
 
     local collection = hairData.collection or const.BASE_COLLECTION
 
-    if not Skin.collections.exists(ped, collection) then
+    if not Appearance.collections.exists(ped, collection) then
         collection = const.BASE_COLLECTION
     end
 
-    local drawables, _ = Skin.collections.componentCounts(ped, const.COMPONENT_HAIR, collection)
+    local drawables, _ = Appearance.collections.componentCounts(ped, const.COMPONENT_HAIR, collection)
     local drawable = hairData.drawable
 
     if drawables > 0 and (drawable < 0 or drawable >= drawables) then
@@ -61,7 +61,7 @@ function hair.validate(ped, hairData)
         drawable = math.max(0, math.min(drawable, drawables - 1))
     end
 
-    local _, textures = Skin.collections.componentCounts(ped, const.COMPONENT_HAIR, collection, drawable)
+    local _, textures = Appearance.collections.componentCounts(ped, const.COMPONENT_HAIR, collection, drawable)
     local texture = hairData.texture
 
     if texture < 0 or texture >= math.max(textures, 1) then

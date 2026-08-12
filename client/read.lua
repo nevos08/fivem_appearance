@@ -1,6 +1,6 @@
-Skin = Skin or {}
+Appearance = Appearance or {}
 
-local const = Skin.const
+local const = Appearance.const
 
 --- Reads an appearance back off a ped using the natives.
 ---
@@ -10,12 +10,12 @@ local const = Skin.const
 --- list over a good one.
 ---
 --- @return table appearance, boolean partial
-function Skin.read(ped)
+function Appearance.read(ped)
     ped = ped or PlayerPedId()
 
     local model = GetEntityModel(ped)
-    local sex = Skin.schema.sexOf(model)
-    local out = Skin.schema.default(sex)
+    local sex = Appearance.schema.sexOf(model)
+    local out = Appearance.schema.default(sex)
 
     out.model = model
 
@@ -49,16 +49,16 @@ function Skin.read(ped)
     out.hair.drawable = GetPedDrawableVariationCollectionLocalIndex(ped, const.COMPONENT_HAIR) or 0
     out.hair.texture = GetPedTextureVariation(ped, const.COMPONENT_HAIR) or 0
 
-    if Skin.hasNative("GetPedHairColor") then
+    if Appearance.hasNative("GetPedHairColor") then
         out.hair.color = GetPedHairColor(ped) or 0
     end
-    if Skin.hasNative("GetPedHairHighlightColor") then
+    if Appearance.hasNative("GetPedHairHighlightColor") then
         out.hair.highlight = GetPedHairHighlightColor(ped) or 0
     end
 
     if sex then
         -- Head blend ---------------------------------------------------------
-        if Skin.hasNative("GetPedHeadBlendData") then
+        if Appearance.hasNative("GetPedHeadBlendData") then
             local blend = GetPedHeadBlendData(ped)
             if type(blend) == "table" then
                 out.headBlend.shapeFirst = blend.shapeFirst or out.headBlend.shapeFirst
@@ -71,14 +71,14 @@ function Skin.read(ped)
         end
 
         -- Face features ------------------------------------------------------
-        if Skin.hasNative("GetPedFaceFeature") then
+        if Appearance.hasNative("GetPedFaceFeature") then
             for i = 1, #const.FACE_FEATURES do
                 out.faceFeatures[const.FACE_FEATURES[i]] = GetPedFaceFeature(ped, i - 1) or 0.0
             end
         end
 
         -- Head overlays ------------------------------------------------------
-        if Skin.hasNative("GetPedHeadOverlayData") then
+        if Appearance.hasNative("GetPedHeadOverlayData") then
             for i = 1, #const.HEAD_OVERLAYS do
                 local name = const.HEAD_OVERLAYS[i]
                 local ok, style, colorType, color, secondColor, opacity = GetPedHeadOverlayData(ped, i - 1)
@@ -95,16 +95,16 @@ function Skin.read(ped)
             end
         end
 
-        if Skin.hasNative("GetPedEyeColor") then
+        if Appearance.hasNative("GetPedEyeColor") then
             out.eyeColor = GetPedEyeColor(ped) or 0
         end
     end
 
     -- Decorations are not readable - carry them over from the cache instead.
-    local cached = Skin.client.current
+    local cached = Appearance.client.current
     if cached then
-        out.tattoos = Skin.path.copy(cached.tattoos)
-        out.hair.fade = Skin.path.copy(cached.hair.fade)
+        out.tattoos = Appearance.path.copy(cached.tattoos)
+        out.hair.fade = Appearance.path.copy(cached.hair.fade)
         return out, false
     end
 

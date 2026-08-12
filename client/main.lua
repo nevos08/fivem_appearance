@@ -1,35 +1,35 @@
-Skin = Skin or {}
+Appearance = Appearance or {}
 
-local const = Skin.const
-local copy = Skin.path.copy
+local const = Appearance.const
+local copy = Appearance.path.copy
 
 -----------------------------------------------------------------------------
 -- Whole appearance
 -----------------------------------------------------------------------------
 
-local function Apply(appearance, opts) return Skin.apply(appearance, opts) end
-local function Update(partial) return Skin.update(partial) end
-local function GetAppearance() return copy(Skin.getCurrent()) end
+local function Apply(appearance, opts) return Appearance.apply(appearance, opts) end
+local function Update(partial) return Appearance.update(partial) end
+local function GetAppearance() return copy(Appearance.getCurrent()) end
 
 local function Read(ped)
-    local appearance, partial = Skin.read(ped or PlayerPedId())
+    local appearance, partial = Appearance.read(ped or PlayerPedId())
     return appearance, partial
 end
 
 local function Get(pathStr)
-    local current = Skin.getCurrent()
+    local current = Appearance.getCurrent()
     if not pathStr then return copy(current) end
-    return copy(Skin.path.get(current, pathStr))
+    return copy(Appearance.path.get(current, pathStr))
 end
 
 local function Reset()
-    local sex = Skin.schema.sexOf(GetEntityModel(PlayerPedId())) or "male"
-    return Skin.apply(Skin.schema.default(sex))
+    local sex = Appearance.schema.sexOf(GetEntityModel(PlayerPedId())) or "male"
+    return Appearance.apply(Appearance.schema.default(sex))
 end
 
 local function SetNaked()
-    local current = Skin.getCurrent()
-    local sex = Skin.schema.sexOf(current.model) or "male"
+    local current = Appearance.getCurrent()
+    local sex = Appearance.schema.sexOf(current.model) or "male"
     local naked = const.NAKED[sex] or {}
 
     local components = {}
@@ -42,45 +42,45 @@ local function SetNaked()
         props[name] = { collection = const.BASE_COLLECTION, drawable = -1, texture = 0 }
     end
 
-    return Skin.update({ components = components, props = props })
+    return Appearance.update({ components = components, props = props })
 end
 
 -----------------------------------------------------------------------------
 -- Model
 -----------------------------------------------------------------------------
 
-local function SetModel(model) return Skin.update({ model = model }) end
-local function GetModel() return Skin.getCurrent().model end
-local function GetSex() return Skin.schema.sexOf(Skin.getCurrent().model) end
-local function IsFreemode() return Skin.schema.isFreemode(Skin.getCurrent().model) end
+local function SetModel(model) return Appearance.update({ model = model }) end
+local function GetModel() return Appearance.getCurrent().model end
+local function GetSex() return Appearance.schema.sexOf(Appearance.getCurrent().model) end
+local function IsFreemode() return Appearance.schema.isFreemode(Appearance.getCurrent().model) end
 
 -----------------------------------------------------------------------------
 -- Head
 -----------------------------------------------------------------------------
 
-local function SetHeadBlend(blend) return Skin.update({ headBlend = blend }) end
-local function GetHeadBlend() return copy(Skin.getCurrent().headBlend) end
+local function SetHeadBlend(blend) return Appearance.update({ headBlend = blend }) end
+local function GetHeadBlend() return copy(Appearance.getCurrent().headBlend) end
 
 local function SetFaceFeature(nameOrIndex, value)
-    local name = Skin.resolveFeature(nameOrIndex)
+    local name = Appearance.resolveFeature(nameOrIndex)
     if not name then return false, "unknown face feature" end
-    return Skin.update({ faceFeatures = { [name] = value } })
+    return Appearance.update({ faceFeatures = { [name] = value } })
 end
 
 local function GetFaceFeature(nameOrIndex)
-    local name = Skin.resolveFeature(nameOrIndex)
+    local name = Appearance.resolveFeature(nameOrIndex)
     if not name then return nil end
-    return Skin.getCurrent().faceFeatures[name]
+    return Appearance.getCurrent().faceFeatures[name]
 end
 
-local function SetFaceFeatures(tbl) return Skin.update({ faceFeatures = tbl }) end
-local function GetFaceFeatures() return copy(Skin.getCurrent().faceFeatures) end
+local function SetFaceFeatures(tbl) return Appearance.update({ faceFeatures = tbl }) end
+local function GetFaceFeatures() return copy(Appearance.getCurrent().faceFeatures) end
 
 local function SetOverlay(nameOrId, style, opacity, color, secondColor)
-    local name = Skin.resolveOverlay(nameOrId)
+    local name = Appearance.resolveOverlay(nameOrId)
     if not name then return false, "unknown overlay" end
 
-    return Skin.update({
+    return Appearance.update({
         headOverlays = {
             [name] = {
                 style = style,
@@ -93,23 +93,23 @@ local function SetOverlay(nameOrId, style, opacity, color, secondColor)
 end
 
 local function GetOverlay(nameOrId)
-    local name = Skin.resolveOverlay(nameOrId)
+    local name = Appearance.resolveOverlay(nameOrId)
     if not name then return nil end
-    return copy(Skin.getCurrent().headOverlays[name])
+    return copy(Appearance.getCurrent().headOverlays[name])
 end
 
-local function SetOverlays(tbl) return Skin.update({ headOverlays = tbl }) end
-local function GetOverlays() return copy(Skin.getCurrent().headOverlays) end
+local function SetOverlays(tbl) return Appearance.update({ headOverlays = tbl }) end
+local function GetOverlays() return copy(Appearance.getCurrent().headOverlays) end
 
-local function SetEyeColor(color) return Skin.update({ eyeColor = color }) end
-local function GetEyeColor() return Skin.getCurrent().eyeColor end
+local function SetEyeColor(color) return Appearance.update({ eyeColor = color }) end
+local function GetEyeColor() return Appearance.getCurrent().eyeColor end
 
 -----------------------------------------------------------------------------
 -- Hair (fade always travels with the style)
 -----------------------------------------------------------------------------
 
 local function SetHair(collection, drawable, texture, color, highlight, fade)
-    return Skin.update({
+    return Appearance.update({
         hair = {
             collection = collection,
             drawable = drawable,
@@ -121,31 +121,31 @@ local function SetHair(collection, drawable, texture, color, highlight, fade)
     })
 end
 
-local function GetHair() return copy(Skin.getCurrent().hair) end
+local function GetHair() return copy(Appearance.getCurrent().hair) end
 
 local function SetHairStyle(collection, drawable, texture)
-    return Skin.update({ hair = { collection = collection, drawable = drawable, texture = texture } })
+    return Appearance.update({ hair = { collection = collection, drawable = drawable, texture = texture } })
 end
 
 local function GetHairStyle()
-    local hair = Skin.getCurrent().hair
+    local hair = Appearance.getCurrent().hair
     return hair.collection, hair.drawable, hair.texture
 end
 
 local function SetHairColor(color, highlight)
-    return Skin.update({ hair = { color = color, highlight = highlight } })
+    return Appearance.update({ hair = { color = color, highlight = highlight } })
 end
 
 local function GetHairColor()
-    local hair = Skin.getCurrent().hair
+    local hair = Appearance.getCurrent().hair
     return hair.color, hair.highlight
 end
 
-local function SetHairFade(fade) return Skin.update({ hair = { fade = fade } }) end
+local function SetHairFade(fade) return Appearance.update({ hair = { fade = fade } }) end
 
 local function GetHairFade()
-    local current = Skin.getCurrent()
-    local fade = Skin.hair.resolveFade(current.model, current.hair)
+    local current = Appearance.getCurrent()
+    local fade = Appearance.hair.resolveFade(current.model, current.hair)
     return fade and copy(fade) or fade
 end
 
@@ -154,10 +154,10 @@ end
 -----------------------------------------------------------------------------
 
 local function SetComponent(nameOrId, collection, drawable, texture, palette)
-    local name = Skin.resolveComponent(nameOrId)
+    local name = Appearance.resolveComponent(nameOrId)
     if not name then return false, "unknown component" end
 
-    return Skin.update({
+    return Appearance.update({
         components = {
             [name] = {
                 collection = collection,
@@ -170,22 +170,22 @@ local function SetComponent(nameOrId, collection, drawable, texture, palette)
 end
 
 local function GetComponent(nameOrId)
-    local name = Skin.resolveComponent(nameOrId)
+    local name = Appearance.resolveComponent(nameOrId)
     if not name then return nil end
-    return copy(Skin.getCurrent().components[name])
+    return copy(Appearance.getCurrent().components[name])
 end
 
-local function SetComponents(tbl) return Skin.update({ components = tbl }) end
-local function GetComponents() return copy(Skin.getCurrent().components) end
+local function SetComponents(tbl) return Appearance.update({ components = tbl }) end
+local function GetComponents() return copy(Appearance.getCurrent().components) end
 
 local function ClearComponent(nameOrId)
-    local name = Skin.resolveComponent(nameOrId)
+    local name = Appearance.resolveComponent(nameOrId)
     if not name then return false, "unknown component" end
 
-    local sex = Skin.schema.sexOf(Skin.getCurrent().model) or "male"
+    local sex = Appearance.schema.sexOf(Appearance.getCurrent().model) or "male"
     local naked = const.NAKED[sex] and const.NAKED[sex][name]
 
-    return Skin.update({
+    return Appearance.update({
         components = {
             [name] = {
                 collection = const.BASE_COLLECTION,
@@ -198,28 +198,28 @@ local function ClearComponent(nameOrId)
 end
 
 local function SetProp(nameOrId, collection, drawable, texture)
-    local name = Skin.resolveProp(nameOrId)
+    local name = Appearance.resolveProp(nameOrId)
     if not name then return false, "unknown prop" end
 
-    return Skin.update({
+    return Appearance.update({
         props = { [name] = { collection = collection, drawable = drawable, texture = texture } }
     })
 end
 
 local function GetProp(nameOrId)
-    local name = Skin.resolveProp(nameOrId)
+    local name = Appearance.resolveProp(nameOrId)
     if not name then return nil end
-    return copy(Skin.getCurrent().props[name])
+    return copy(Appearance.getCurrent().props[name])
 end
 
-local function SetProps(tbl) return Skin.update({ props = tbl }) end
-local function GetProps() return copy(Skin.getCurrent().props) end
+local function SetProps(tbl) return Appearance.update({ props = tbl }) end
+local function GetProps() return copy(Appearance.getCurrent().props) end
 
 local function ClearProp(nameOrId)
-    local name = Skin.resolveProp(nameOrId)
+    local name = Appearance.resolveProp(nameOrId)
     if not name then return false, "unknown prop" end
 
-    return Skin.update({
+    return Appearance.update({
         props = { [name] = { collection = const.BASE_COLLECTION, drawable = -1, texture = 0 } }
     })
 end
@@ -228,42 +228,42 @@ end
 -- Tattoos
 -----------------------------------------------------------------------------
 
-local function SetTattoos(list) return Skin.update({ tattoos = list or {} }) end
-local function GetTattoos() return copy(Skin.getCurrent().tattoos) end
+local function SetTattoos(list) return Appearance.update({ tattoos = list or {} }) end
+local function GetTattoos() return copy(Appearance.getCurrent().tattoos) end
 
 local function HasTattoo(tattoo)
-    return Skin.tattoos.indexOf(Skin.getCurrent().tattoos, tattoo) ~= nil
+    return Appearance.tattoos.indexOf(Appearance.getCurrent().tattoos, tattoo) ~= nil
 end
 
 local function AddTattoo(tattoo)
-    local list = copy(Skin.getCurrent().tattoos)
-    if Skin.tattoos.indexOf(list, tattoo) then return true end
+    local list = copy(Appearance.getCurrent().tattoos)
+    if Appearance.tattoos.indexOf(list, tattoo) then return true end
 
     list[#list + 1] = tattoo
-    return Skin.update({ tattoos = list })
+    return Appearance.update({ tattoos = list })
 end
 
 local function RemoveTattoo(tattoo)
-    local list = copy(Skin.getCurrent().tattoos)
-    local index = Skin.tattoos.indexOf(list, tattoo)
+    local list = copy(Appearance.getCurrent().tattoos)
+    local index = Appearance.tattoos.indexOf(list, tattoo)
     if not index then return false, "tattoo not present" end
 
     table.remove(list, index)
-    return Skin.update({ tattoos = list })
+    return Appearance.update({ tattoos = list })
 end
 
-local function ClearTattoos() return Skin.update({ tattoos = {} }) end
+local function ClearTattoos() return Appearance.update({ tattoos = {} }) end
 
 -----------------------------------------------------------------------------
 -- Collections / validation
 -----------------------------------------------------------------------------
 
 local function IsValid(nameOrId, collection, drawable, texture)
-    local name = Skin.resolveComponent(nameOrId)
+    local name = Appearance.resolveComponent(nameOrId)
     if not name then return false, "unknown component" end
 
     local slot = { collection = collection, drawable = drawable, texture = texture or 0, palette = 0 }
-    local validated, reason = Skin.collections.validateComponent(PlayerPedId(), name, slot)
+    local validated, reason = Appearance.collections.validateComponent(PlayerPedId(), name, slot)
 
     if not validated then return false, reason end
 
@@ -280,29 +280,29 @@ end
 local function GetVariationCounts(nameOrId, collection, drawable)
     local ped = PlayerPedId()
 
-    local name, componentId = Skin.resolveVariationTarget(nameOrId)
+    local name, componentId = Appearance.resolveVariationTarget(nameOrId)
     if name then
-        return Skin.collections.componentCounts(ped, componentId, collection, drawable)
+        return Appearance.collections.componentCounts(ped, componentId, collection, drawable)
     end
 
-    local propName, anchor = Skin.resolveProp(nameOrId)
+    local propName, anchor = Appearance.resolveProp(nameOrId)
     if propName then
-        return Skin.collections.propCounts(ped, anchor, collection, drawable)
+        return Appearance.collections.propCounts(ped, anchor, collection, drawable)
     end
 
     return 0, 0
 end
 
-local function GetCollections() return Skin.collections.list(PlayerPedId()) end
+local function GetCollections() return Appearance.collections.list(PlayerPedId()) end
 
 local function ToGlobalIndex(nameOrId, collection, drawable)
     local ped = PlayerPedId()
 
-    local name, componentId = Skin.resolveVariationTarget(nameOrId)
-    if name then return Skin.collections.toGlobalDrawable(ped, componentId, collection, drawable) end
+    local name, componentId = Appearance.resolveVariationTarget(nameOrId)
+    if name then return Appearance.collections.toGlobalDrawable(ped, componentId, collection, drawable) end
 
-    local propName, anchor = Skin.resolveProp(nameOrId)
-    if propName then return Skin.collections.toGlobalProp(ped, anchor, collection, drawable) end
+    local propName, anchor = Appearance.resolveProp(nameOrId)
+    if propName then return Appearance.collections.toGlobalProp(ped, anchor, collection, drawable) end
 
     return nil
 end
@@ -310,11 +310,11 @@ end
 local function FromGlobalIndex(nameOrId, globalDrawable)
     local ped = PlayerPedId()
 
-    local name, componentId = Skin.resolveVariationTarget(nameOrId)
-    if name then return Skin.collections.fromGlobalDrawable(ped, componentId, globalDrawable) end
+    local name, componentId = Appearance.resolveVariationTarget(nameOrId)
+    if name then return Appearance.collections.fromGlobalDrawable(ped, componentId, globalDrawable) end
 
-    local propName, anchor = Skin.resolveProp(nameOrId)
-    if propName then return Skin.collections.fromGlobalProp(ped, anchor, globalDrawable) end
+    local propName, anchor = Appearance.resolveProp(nameOrId)
+    if propName then return Appearance.collections.fromGlobalProp(ped, anchor, globalDrawable) end
 
     return nil
 end
@@ -330,31 +330,31 @@ end
 local function GetItemHash(nameOrId, collection, drawable, texture)
     local ped = PlayerPedId()
 
-    local name = Skin.resolveComponent(nameOrId)
-    if name then return Skin.clothing.itemHash(ped, name, slotFor(collection, drawable, texture)) end
+    local name = Appearance.resolveComponent(nameOrId)
+    if name then return Appearance.clothing.itemHash(ped, name, slotFor(collection, drawable, texture)) end
 
-    local propName = Skin.resolveProp(nameOrId)
-    if propName then return Skin.clothing.propItemHash(ped, propName, slotFor(collection, drawable, texture)) end
+    local propName = Appearance.resolveProp(nameOrId)
+    if propName then return Appearance.clothing.propItemHash(ped, propName, slotFor(collection, drawable, texture)) end
 
     return 0
 end
 
 local function GetForcedComponents(nameOrId, collection, drawable, texture)
-    local name = Skin.resolveComponent(nameOrId)
+    local name = Appearance.resolveComponent(nameOrId)
     if not name then return {} end
-    return Skin.clothing.forcedComponents(PlayerPedId(), name, slotFor(collection, drawable, texture))
+    return Appearance.clothing.forcedComponents(PlayerPedId(), name, slotFor(collection, drawable, texture))
 end
 
 local function GetForcedProps(nameOrId, collection, drawable, texture)
-    local name = Skin.resolveComponent(nameOrId)
+    local name = Appearance.resolveComponent(nameOrId)
     if not name then return {} end
-    return Skin.clothing.forcedProps(PlayerPedId(), name, slotFor(collection, drawable, texture))
+    return Appearance.clothing.forcedProps(PlayerPedId(), name, slotFor(collection, drawable, texture))
 end
 
 local function GetVariants(nameOrId, collection, drawable, texture)
-    local name = Skin.resolveComponent(nameOrId)
+    local name = Appearance.resolveComponent(nameOrId)
     if not name then return {} end
-    return Skin.clothing.variants(PlayerPedId(), name, slotFor(collection, drawable, texture))
+    return Appearance.clothing.variants(PlayerPedId(), name, slotFor(collection, drawable, texture))
 end
 
 --- Resolves a component set without applying it, so a creator can preview what
@@ -364,7 +364,7 @@ end
 --- show what the forced components actually do to the outfit.
 --- @return table components, table props
 local function ResolveOutfit(components)
-    return Skin.clothing.resolve(PlayerPedId(), components or {}, {})
+    return Appearance.clothing.resolve(PlayerPedId(), components or {}, {})
 end
 
 -----------------------------------------------------------------------------
@@ -415,26 +415,26 @@ end
 -- Server -> client routing
 -----------------------------------------------------------------------------
 
-RegisterNetEvent("nvx_skin:call", function(action, args)
+RegisterNetEvent("nvx_appearance:call", function(action, args)
     local fn = api[action]
     if not fn then
-        Skin.warn(("server called unknown action '%s'"):format(tostring(action)))
+        Appearance.warn(("server called unknown action '%s'"):format(tostring(action)))
         return
     end
 
     fn(table.unpack(args or {}, 1, args and args.n or 0))
 end)
 
-RegisterNetEvent("nvx_skin:request", function(id, action, args)
+RegisterNetEvent("nvx_appearance:request", function(id, action, args)
     local fn = api[action]
 
     if not fn then
-        TriggerServerEvent("nvx_skin:response", id, nil)
+        TriggerServerEvent("nvx_appearance:response", id, nil)
         return
     end
 
     local results = table.pack(fn(table.unpack(args or {}, 1, args and args.n or 0)))
-    TriggerServerEvent("nvx_skin:response", id, results)
+    TriggerServerEvent("nvx_appearance:response", id, results)
 end)
 
 -----------------------------------------------------------------------------
@@ -444,11 +444,11 @@ end)
 CreateThread(function()
     if not Config.Debug or not Config.DebugCommands then return end
 
-    RegisterCommand("nvxskin_dump", function()
+    RegisterCommand("nvxappearance_dump", function()
         print(json.encode(GetAppearance(), { indent = true }))
     end, false)
 
-    RegisterCommand("nvxskin_collections", function(_, args)
+    RegisterCommand("nvxappearance_collections", function(_, args)
         local nameOrId = args[1]
         if not nameOrId then
             print(json.encode(GetCollections()))
@@ -463,15 +463,15 @@ CreateThread(function()
         print(json.encode(out, { indent = true }))
     end, false)
 
-    RegisterCommand("nvxskin_random", function()
+    RegisterCommand("nvxappearance_random", function()
         local ped = PlayerPedId()
         local components = {}
 
         for name, componentId in pairs(const.COMPONENTS) do
-            local drawables = Skin.collections.componentCounts(ped, componentId, const.BASE_COLLECTION)
+            local drawables = Appearance.collections.componentCounts(ped, componentId, const.BASE_COLLECTION)
             if drawables > 0 then
                 local drawable = math.random(0, drawables - 1)
-                local _, textures = Skin.collections.componentCounts(ped, componentId, const.BASE_COLLECTION, drawable)
+                local _, textures = Appearance.collections.componentCounts(ped, componentId, const.BASE_COLLECTION, drawable)
                 components[name] = {
                     collection = const.BASE_COLLECTION,
                     drawable = drawable,
@@ -484,15 +484,15 @@ CreateThread(function()
         Update({ components = components })
     end, false)
 
-    RegisterCommand("nvxskin_set", function(_, args)
+    RegisterCommand("nvxappearance_set", function(_, args)
         local pathStr, value = args[1], args[2]
         if not pathStr or value == nil then
-            print("usage: /nvxskin_set <path> <value>")
+            print("usage: /nvxappearance_set <path> <value>")
             return
         end
 
         local partial = {}
-        Skin.path.set(partial, pathStr, tonumber(value) or value)
+        Appearance.path.set(partial, pathStr, tonumber(value) or value)
 
         local ok, reason = Update(partial)
         print(ok and "ok" or ("failed: " .. tostring(reason)))

@@ -1,7 +1,7 @@
-Skin = Skin or {}
+Appearance = Appearance or {}
 
 local path = {}
-Skin.path = path
+Appearance.path = path
 
 --- Splits "components.torso.drawable" into { "components", "torso", "drawable" }.
 --- Numeric segments stay strings here; resolution tries both.

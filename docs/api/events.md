@@ -2,12 +2,12 @@
 
 Events are **outbound notifications only**. They are never a control path - there is no event that changes an appearance. Use the [client](client.md) and [server](server.md) exports for that.
 
-## `nvx_skin:applied` (client)
+## `nvx_appearance:applied` (client)
 
 Fires after every successful run of the apply pipeline, local ped only.
 
 ```lua
-AddEventHandler('nvx_skin:applied', function(appearance)
+AddEventHandler('nvx_appearance:applied', function(appearance)
     print(('model %s, %d tattoos'):format(appearance.model, #appearance.tattoos))
 end)
 ```
@@ -16,12 +16,12 @@ The table is a copy - mutating it does not affect anything.
 
 Note that this fires for **every** change, including each scroll in a clothing shop. Debounce anything expensive.
 
-## `nvx_skin:appearanceChanged` (server)
+## `nvx_appearance:appearanceChanged` (server)
 
 Fires when a client's appearance reaches the server and is written to the statebag.
 
 ```lua
-AddEventHandler('nvx_skin:appearanceChanged', function(src, appearance)
+AddEventHandler('nvx_appearance:appearanceChanged', function(src, appearance)
     saveAppearance(src, appearance)
 end)
 ```
@@ -34,14 +34,14 @@ This is also the hook a framework bridge attaches to.
 
 ## Statebag
 
-With sync enabled, each player's appearance is on their state bag under `nvx_skin:appearance`, replicated to all clients:
+With sync enabled, each player's appearance is on their state bag under `nvx_appearance:data`, replicated to all clients:
 
 ```lua
 -- server
-local appearance = Player(src).state['nvx_skin:appearance']
+local appearance = Player(src).state['nvx_appearance:data']
 
 -- client
-AddStateBagChangeHandler('nvx_skin:appearance', nil, function(bagName, _, value)
+AddStateBagChangeHandler('nvx_appearance:data', nil, function(bagName, _, value)
     -- ...
 end)
 ```

@@ -4,7 +4,7 @@
 
 The collection set natives **fail silently**. Give `SetPedCollectionComponentVariation` a drawable that does not exist and it returns nothing, logs nothing, and leaves you with an invisible or wrong-looking ped. There is no error to catch.
 
-That is the single most common way a skin system breaks in a way nobody can debug. So `nvx_skin` never hands a value to those natives without checking it first.
+That is the single most common way a skin system breaks in a way nobody can debug. So `nvx_appearance` never hands a value to those natives without checking it first.
 
 ## The three modes
 
@@ -21,7 +21,7 @@ Config.Validation = "clamp"   -- "clamp" | "reject" | "off"
 Worked example - `torso` has 412 drawables in the base collection:
 
 ```lua
-local ok, reason = exports.nvx_skin:SetComponent('torso', '', 9999, 0)
+local ok, reason = exports.nvx_appearance:SetComponent('torso', '', 9999, 0)
 ```
 
 | Mode | `ok` | `reason` | Ped |
@@ -48,8 +48,8 @@ With `Config.Debug` on, a Gen9-exclusive item additionally logs a warning - it w
 This is the part that matters for persistence. After a clamp, the **cache holds what the ped actually wears**, not what you asked for:
 
 ```lua
-exports.nvx_skin:SetComponent('torso', '', 9999, 0)
-exports.nvx_skin:GetComponent('torso').drawable   --> 411, not 9999
+exports.nvx_appearance:SetComponent('torso', '', 9999, 0)
+exports.nvx_appearance:GetComponent('torso').drawable   --> 411, not 9999
 ```
 
 So a saved appearance never contains a value the game rejected, and the synced statebag never pushes a broken value to other clients.
@@ -59,7 +59,7 @@ So a saved appearance never contains a value the game rejected, and the synced s
 In `reject` mode the whole set is validated **before** anything is written. One bad slot means no slot is applied - you never end up with a half-changed ped from input that was supposed to be refused.
 
 ```lua
-local ok, reason = exports.nvx_skin:SetComponents({
+local ok, reason = exports.nvx_appearance:SetComponents({
     torso = { collection = '', drawable = 5,    texture = 0 },   -- fine
     pants = { collection = '', drawable = 9999, texture = 0 }    -- invalid
 })
@@ -83,7 +83,7 @@ This is what keeps a player from turning invisible after you remove an addon clo
 ## Checking without applying
 
 ```lua
-local ok, reason = exports.nvx_skin:IsValid('torso', '', 9999, 0)
+local ok, reason = exports.nvx_appearance:IsValid('torso', '', 9999, 0)
 -- false, "drawable 9999 out of range (0-411) for 'torso'"
 ```
 
@@ -96,16 +96,16 @@ Use it when building a clothing shop or character creator, together with [`GetVa
 The collection natives are **client-side only**. A server-side setter therefore returns `true` as soon as the message is sent - that is not confirmation that the value was accepted:
 
 ```lua
-exports.nvx_skin:SetComponent(src, 'torso', '', 9999, 0)   --> true, always
+exports.nvx_appearance:SetComponent(src, 'torso', '', 9999, 0)   --> true, always
 ```
 
 The client still validates before applying. If the outcome matters, read the value back:
 
 ```lua
 CreateThread(function()
-    exports.nvx_skin:SetComponent(src, 'torso', '', 9999, 0)
+    exports.nvx_appearance:SetComponent(src, 'torso', '', 9999, 0)
     Wait(200)
-    local slot = exports.nvx_skin:GetComponent(src, 'torso')
+    local slot = exports.nvx_appearance:GetComponent(src, 'torso')
     print(slot.drawable)   -- what actually got applied
 end)
 ```

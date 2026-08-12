@@ -1,9 +1,9 @@
-Skin = Skin or {}
+Appearance = Appearance or {}
 
-local const = Skin.const
+local const = Appearance.const
 
 local collections = {}
-Skin.collections = collections
+Appearance.collections = collections
 
 --- Every collection name available on the ped, in game order.
 --- @return string[]
@@ -128,10 +128,10 @@ function collections.validateComponent(ped, name, slot)
             return nil, ("collection '%s' not present on ped"):format(collection)
         end
 
-        local sex = Skin.schema.sexOf(GetEntityModel(ped)) or "male"
+        local sex = Appearance.schema.sexOf(GetEntityModel(ped)) or "male"
         local naked = const.NAKED[sex] and const.NAKED[sex][name]
 
-        Skin.log(("collection '%s' missing for '%s', falling back to naked"):format(collection, name))
+        Appearance.log(("collection '%s' missing for '%s', falling back to naked"):format(collection, name))
 
         return {
             collection = const.BASE_COLLECTION,
@@ -152,7 +152,7 @@ function collections.validateComponent(ped, name, slot)
             return nil, ("drawable %d out of range (0-%d) for '%s'"):format(drawable, drawables - 1, name)
         end
         drawable = math.max(0, math.min(drawable, drawables - 1))
-        Skin.log(("clamped %s drawable %d -> %d"):format(name, slot.drawable, drawable))
+        Appearance.log(("clamped %s drawable %d -> %d"):format(name, slot.drawable, drawable))
     end
 
     local _, textures = collections.componentCounts(ped, componentId, collection, drawable)
@@ -185,9 +185,9 @@ function collections.validateComponent(ped, name, slot)
         texture = found
     end
 
-    if Config.Debug and Skin.hasNative("IsPedCollectionComponentVariationGen9Exclusive") then
+    if Config.Debug and Appearance.hasNative("IsPedCollectionComponentVariationGen9Exclusive") then
         if IsPedCollectionComponentVariationGen9Exclusive(ped, componentId, collection, drawable) then
-            Skin.log(("'%s' %s/%d is Gen9-exclusive and may not render for every client"):format(name, collection, drawable))
+            Appearance.log(("'%s' %s/%d is Gen9-exclusive and may not render for every client"):format(name, collection, drawable))
         end
     end
 

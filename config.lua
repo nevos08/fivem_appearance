@@ -6,7 +6,7 @@ Config.Debug = false
 -- Locale used for log/error messages. Falls back to "en" when a key is missing.
 Config.Locale = "de"
 
--- Registers /nvxskin_* test commands. Requires Config.Debug.
+-- Registers /nvxappearance_* test commands. Requires Config.Debug.
 Config.DebugCommands = true
 
 -----------------------------------------------------------------------------

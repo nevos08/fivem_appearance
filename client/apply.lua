@@ -1,4 +1,4 @@
-Skin = Skin or {}
+Appearance = Appearance or {}
 
 --- The apply pipeline.
 ---
@@ -14,12 +14,12 @@ Skin = Skin or {}
 --- @param appearance table already normalized
 --- @param opts table|nil { skipModel, remote, explicit }
 --- @return boolean ok, string|nil reason
-function Skin.applyTo(ped, appearance, opts)
+function Appearance.applyTo(ped, appearance, opts)
     opts = opts or {}
 
     -- 1. Model -------------------------------------------------------------
     if not opts.skipModel and appearance.model then
-        local ok, reason = Skin.ped.setModel(appearance.model)
+        local ok, reason = Appearance.ped.setModel(appearance.model)
         if not ok then return false, reason end
 
         -- The model change replaces the ped handle.
@@ -31,66 +31,66 @@ function Skin.applyTo(ped, appearance, opts)
     end
 
     -- Legacy global indices can only be resolved against a real ped.
-    Skin.components.resolveLegacy(ped, appearance)
+    Appearance.components.resolveLegacy(ped, appearance)
 
-    local freemode = Skin.schema.isFreemode(GetEntityModel(ped))
+    local freemode = Appearance.schema.isFreemode(GetEntityModel(ped))
 
     if freemode then
         -- 2. Head blend ----------------------------------------------------
-        Skin.head.applyBlend(ped, appearance.headBlend)
+        Appearance.head.applyBlend(ped, appearance.headBlend)
 
         -- 3. Face features -------------------------------------------------
-        Skin.head.applyFeatures(ped, appearance.faceFeatures)
+        Appearance.head.applyFeatures(ped, appearance.faceFeatures)
 
         -- 4. Head overlays -------------------------------------------------
-        Skin.head.applyOverlays(ped, appearance.headOverlays)
+        Appearance.head.applyOverlays(ped, appearance.headOverlays)
 
         -- 5. Eye colour ----------------------------------------------------
-        Skin.head.applyEyeColor(ped, appearance.eyeColor)
+        Appearance.head.applyEyeColor(ped, appearance.eyeColor)
 
         -- 6. Hair ----------------------------------------------------------
-        local validated, hairReason = Skin.hair.validate(ped, appearance.hair)
+        local validated, hairReason = Appearance.hair.validate(ped, appearance.hair)
         if not validated then
             if Config.Validation == "reject" then return false, hairReason end
         else
             appearance.hair = validated
         end
-        Skin.hair.apply(ped, appearance.hair)
+        Appearance.hair.apply(ped, appearance.hair)
     end
 
     -- 7. Components / props ---------------------------------------------
-    local ok, reason = Skin.components.applyAll(ped, appearance, opts.explicit)
+    local ok, reason = Appearance.components.applyAll(ped, appearance, opts.explicit)
     if not ok then return false, reason end
 
     -- 8. Decorations (tattoos + hair fade) -------------------------------
-    Skin.tattoos.apply(ped, appearance)
+    Appearance.tattoos.apply(ped, appearance)
 
     return true
 end
 
 --- Applies a full appearance to the local ped and caches it.
 --- @return boolean ok, string|nil reason
-function Skin.apply(input, opts)
+function Appearance.apply(input, opts)
     opts = opts or {}
 
-    if Skin.client.busy then
+    if Appearance.client.busy then
         return false, "another apply is already running"
     end
 
-    Skin.client.busy = true
+    Appearance.client.busy = true
 
-    local appearance = Skin.schema.normalize(input)
-    local ok, reason = Skin.applyTo(PlayerPedId(), appearance, opts)
+    local appearance = Appearance.schema.normalize(input)
+    local ok, reason = Appearance.applyTo(PlayerPedId(), appearance, opts)
 
-    Skin.client.busy = false
+    Appearance.client.busy = false
 
     if not ok then
-        Skin.err("apply failed:", reason)
+        Appearance.err("apply failed:", reason)
         return false, reason
     end
 
-    Skin.client.current = appearance
-    Skin.onApplied(appearance)
+    Appearance.client.current = appearance
+    Appearance.onApplied(appearance)
 
     return true
 end
@@ -100,11 +100,11 @@ end
 --- Only the touched subsystems are re-applied - except for model, hair and
 --- tattoos, which force the pipeline from their step downwards because the
 --- natives below them destroy state.
-function Skin.update(partial)
+function Appearance.update(partial)
     if type(partial) ~= "table" then return false, "partial must be a table" end
 
-    local current = Skin.getCurrent()
-    local merged, touched = Skin.schema.merge(current, partial)
+    local current = Appearance.getCurrent()
+    local merged, touched = Appearance.schema.merge(current, partial)
 
     -- Slots named in the partial were set on purpose and must win over GTA's
     -- forced components.
@@ -119,29 +119,29 @@ function Skin.update(partial)
     local ped = PlayerPedId()
     local skipModel = not touched.model
 
-    if Skin.client.busy then return false, "another apply is already running" end
-    Skin.client.busy = true
+    if Appearance.client.busy then return false, "another apply is already running" end
+    Appearance.client.busy = true
 
-    local ok, reason = Skin.applyTo(ped, merged, { skipModel = skipModel, explicit = explicit })
+    local ok, reason = Appearance.applyTo(ped, merged, { skipModel = skipModel, explicit = explicit })
 
-    Skin.client.busy = false
+    Appearance.client.busy = false
 
     if not ok then
-        Skin.err("update failed:", reason)
+        Appearance.err("update failed:", reason)
         return false, reason
     end
 
-    Skin.client.current = merged
-    Skin.onApplied(merged)
+    Appearance.client.current = merged
+    Appearance.onApplied(merged)
 
     return true
 end
 
 --- Fired after every successful pipeline run. Sync hooks in here.
-function Skin.onApplied(appearance)
-    TriggerEvent("nvx_skin:applied", Skin.path.copy(appearance))
+function Appearance.onApplied(appearance)
+    TriggerEvent("nvx_appearance:applied", Appearance.path.copy(appearance))
 
-    if Skin.sync then
-        Skin.sync.push(appearance)
+    if Appearance.sync then
+        Appearance.sync.push(appearance)
     end
 end

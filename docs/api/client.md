@@ -1,6 +1,6 @@
 # Client exports
 
-All calls go through `exports.nvx_skin` and act on the **local ped**.
+All calls go through `exports.nvx_appearance` and act on the **local ped**.
 
 Setters return `ok, reason`. Getters return **copies** - mutating a returned table cannot corrupt the internal cache.
 
@@ -19,9 +19,9 @@ Slot arguments accept a name or a numeric id; `collection` may be `nil`, meaning
 | `SetNaked()` | Underwear, all props removed |
 
 ```lua
-exports.nvx_skin:Apply(appearance)
-exports.nvx_skin:Update({ hair = { color = 12 } })
-local drawable = exports.nvx_skin:Get('components.torso.drawable')
+exports.nvx_appearance:Apply(appearance)
+exports.nvx_appearance:Update({ hair = { color = 12 } })
+local drawable = exports.nvx_appearance:Get('components.torso.drawable')
 ```
 
 ## Model
@@ -48,8 +48,8 @@ A model change resets components, overlays **and decorations**, so the whole app
 | `SetEyeColor(color)` / `GetEyeColor()` | |
 
 ```lua
-exports.nvx_skin:SetOverlay('beard', 4, 0.8, 1, 0)
-exports.nvx_skin:SetFaceFeature('noseWidth', -0.4)
+exports.nvx_appearance:SetOverlay('beard', 4, 0.8, 1, 0)
+exports.nvx_appearance:SetFaceFeature('noseWidth', -0.4)
 ```
 
 ## Hair
@@ -65,8 +65,8 @@ The fade is always carried along with the style.
 | `SetHairFade(fade)` / `GetHairFade()` | `false` = off, `true`/`'auto'` = per-style default, table = override |
 
 ```lua
-exports.nvx_skin:SetHairStyle('', 7, 0)
-exports.nvx_skin:SetHairFade(false)
+exports.nvx_appearance:SetHairStyle('', 7, 0)
+exports.nvx_appearance:SetHairFade(false)
 ```
 
 ## Clothing
@@ -95,7 +95,7 @@ Slots passed here are treated as explicit and win over forced components - see [
 | `ClearTattoos()` | |
 
 ```lua
-exports.nvx_skin:AddTattoo({
+exports.nvx_appearance:AddTattoo({
     collection = 'mpairraces_overlays',
     male = 'MP_Airraces_Tattoo_000_M',
     female = 'MP_Airraces_Tattoo_000_F'

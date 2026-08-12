@@ -8,7 +8,7 @@ Everything lives in `config.lua`.
 | --- | --- | --- |
 | `Config.Debug` | `false` | Verbose logging for every apply, clamp and sync event |
 | `Config.Locale` | `'de'` | Locale for log messages, falls back to `en` |
-| `Config.DebugCommands` | `true` | Registers the `/nvxskin_*` commands. Requires `Config.Debug` |
+| `Config.DebugCommands` | `true` | Registers the `/nvxappearance_*` commands. Requires `Config.Debug` |
 
 ## Head blend
 

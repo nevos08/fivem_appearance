@@ -1,7 +1,7 @@
-Skin = Skin or {}
+Appearance = Appearance or {}
 
 local tattoos = {}
-Skin.tattoos = tattoos
+Appearance.tattoos = tattoos
 
 local function toHash(value)
     if type(value) == "string" then return joaat(value) end
@@ -17,7 +17,7 @@ function tattoos.apply(ped, appearance)
     ClearPedDecorations(ped)
 
     local list = appearance.tattoos or {}
-    local sex = Skin.schema.sexOf(appearance.model) or "male"
+    local sex = Appearance.schema.sexOf(appearance.model) or "male"
 
     for i = 1, #list do
         local tattoo = list[i]
@@ -28,7 +28,7 @@ function tattoos.apply(ped, appearance)
         end
     end
 
-    local fade = Skin.hair.resolveFade(appearance.model, appearance.hair)
+    local fade = Appearance.hair.resolveFade(appearance.model, appearance.hair)
     if fade then
         AddPedDecorationFromHashes(ped, toHash(fade.collection), toHash(fade.overlay))
     end

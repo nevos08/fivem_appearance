@@ -3,8 +3,8 @@
 The server mirrors the client API with `src` as the first argument.
 
 ```lua
-exports.nvx_skin:SetComponent(src, 'torso', '', 15, 0)
-local hair = exports.nvx_skin:GetHair(src)
+exports.nvx_appearance:SetComponent(src, 'torso', '', 15, 0)
+local hair = exports.nvx_appearance:GetHair(src)
 ```
 
 ## Setters
@@ -35,7 +35,7 @@ Their timing depends on one setting:
 ```lua
 -- safe under both settings
 CreateThread(function()
-    local appearance, reason = exports.nvx_skin:GetAppearance(src)
+    local appearance, reason = exports.nvx_appearance:GetAppearance(src)
     if not appearance then
         print(('no appearance: %s'):format(reason))   -- "timeout" or "no appearance stored"
     end
@@ -56,13 +56,13 @@ All of these sit on client-only natives. A server-side stub would have to lie ab
 RegisterNetEvent('myjob:changeIntoUniform', function()
     local src = source
 
-    exports.nvx_skin:SetComponents(src, {
+    exports.nvx_appearance:SetComponents(src, {
         torso = { collection = '', drawable = 55, texture = 0 },
         arms  = { collection = '', drawable = 41, texture = 0 },
         pants = { collection = '', drawable = 31, texture = 0 },
         shoes = { collection = '', drawable = 25, texture = 0 }
     })
 
-    exports.nvx_skin:ClearProp(src, 'hats')
+    exports.nvx_appearance:ClearProp(src, 'hats')
 end)
 ```

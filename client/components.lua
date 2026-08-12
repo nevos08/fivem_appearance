@@ -1,9 +1,9 @@
-Skin = Skin or {}
+Appearance = Appearance or {}
 
-local const = Skin.const
+local const = Appearance.const
 
 local components = {}
-Skin.components = components
+Appearance.components = components
 
 --- Resolves legacy slots (no collection given -> the drawable is a global
 --- index) into collection + local index. Needs a real ped, which is why this
@@ -13,7 +13,7 @@ function components.resolveLegacy(ped, appearance)
         if slot.legacy then
             local componentId = const.COMPONENTS[name]
             if componentId then
-                slot.collection, slot.drawable = Skin.collections.fromGlobalDrawable(ped, componentId, slot.drawable)
+                slot.collection, slot.drawable = Appearance.collections.fromGlobalDrawable(ped, componentId, slot.drawable)
             end
             slot.legacy = nil
         end
@@ -23,7 +23,7 @@ function components.resolveLegacy(ped, appearance)
         if slot.legacy then
             local anchor = const.PROPS[name]
             if anchor then
-                slot.collection, slot.drawable = Skin.collections.fromGlobalProp(ped, anchor, slot.drawable)
+                slot.collection, slot.drawable = Appearance.collections.fromGlobalProp(ped, anchor, slot.drawable)
             end
             slot.legacy = nil
         end
@@ -31,7 +31,7 @@ function components.resolveLegacy(ped, appearance)
 
     if appearance.hair.legacy then
         appearance.hair.collection, appearance.hair.drawable =
-            Skin.collections.fromGlobalDrawable(ped, const.COMPONENT_HAIR, appearance.hair.drawable)
+            Appearance.collections.fromGlobalDrawable(ped, const.COMPONENT_HAIR, appearance.hair.drawable)
         appearance.hair.legacy = nil
     end
 
@@ -45,7 +45,7 @@ function components.applyComponent(ped, name, slot)
     local componentId = const.COMPONENTS[name]
     if not componentId then return false, "unknown component" end
 
-    local validated, reason = Skin.collections.validateComponent(ped, name, slot)
+    local validated, reason = Appearance.collections.validateComponent(ped, name, slot)
     if not validated then return false, reason end
 
     SetPedCollectionComponentVariation(
@@ -70,7 +70,7 @@ function components.applyProp(ped, name, slot)
     local anchor = const.PROPS[name]
     if not anchor then return false, "unknown prop" end
 
-    local validated, reason = Skin.collections.validateProp(ped, name, slot)
+    local validated, reason = Appearance.collections.validateProp(ped, name, slot)
     if not validated then return false, reason end
 
     if validated.drawable < 0 then
@@ -97,7 +97,7 @@ end
 --- components first so arms/undershirt match the top.
 --- @param explicit table|nil slots the caller set on purpose (win over forced)
 function components.applyAll(ped, appearance, explicit)
-    local resolved, forcedProps = Skin.clothing.resolve(ped, appearance.components, explicit)
+    local resolved, forcedProps = Appearance.clothing.resolve(ped, appearance.components, explicit)
 
     for name, slot in pairs(resolved) do
         appearance.components[name] = slot
@@ -115,12 +115,12 @@ function components.applyAll(ped, appearance, explicit)
     -- caller would get no way to tell.
     if Config.Validation == "reject" then
         for name, slot in pairs(appearance.components) do
-            local ok, reason = Skin.collections.validateComponent(ped, name, slot)
+            local ok, reason = Appearance.collections.validateComponent(ped, name, slot)
             if not ok then return false, ("component '%s': %s"):format(name, reason or "invalid") end
         end
 
         for name, slot in pairs(appearance.props) do
-            local ok, reason = Skin.collections.validateProp(ped, name, slot)
+            local ok, reason = Appearance.collections.validateProp(ped, name, slot)
             if not ok then return false, ("prop '%s': %s"):format(name, reason or "invalid") end
         end
     end

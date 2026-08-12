@@ -1,9 +1,9 @@
-Skin = Skin or {}
+Appearance = Appearance or {}
 
-local const = Skin.const
+local const = Appearance.const
 
 local clothing = {}
-Skin.clothing = clothing
+Appearance.clothing = clothing
 
 -- GTA records which arms / undershirt belong to a given top in SHOP_CLOTHES.meta
 -- (forcedComponentList). That is the same data the in-game clothing store uses
@@ -14,19 +14,19 @@ Skin.clothing = clothing
 -- clothing return a hash of 0, in which case nothing happens.
 
 local function supported()
-    return Skin.hasNative("GetHashNameForComponent")
-        and Skin.hasNative("GetShopPedApparelForcedComponentCount")
-        and Skin.hasNative("GetForcedComponent")
+    return Appearance.hasNative("GetHashNameForComponent")
+        and Appearance.hasNative("GetShopPedApparelForcedComponentCount")
+        and Appearance.hasNative("GetForcedComponent")
 end
 
 --- The unique shop item hash for a component slot, or 0 when it is not a shop
 --- item (job outfit, addon clothing, placeholder drawable).
 function clothing.itemHash(ped, name, slot)
     local componentId = const.COMPONENTS[name]
-    if not componentId or not Skin.hasNative("GetHashNameForComponent") then return 0 end
+    if not componentId or not Appearance.hasNative("GetHashNameForComponent") then return 0 end
 
     -- The shop natives speak global indices.
-    local global = Skin.collections.toGlobalDrawable(ped, componentId, slot.collection, slot.drawable)
+    local global = Appearance.collections.toGlobalDrawable(ped, componentId, slot.collection, slot.drawable)
     if not global or global < 0 then return 0 end
 
     return GetHashNameForComponent(ped, componentId, global, slot.texture) or 0
@@ -34,9 +34,9 @@ end
 
 function clothing.propItemHash(ped, name, slot)
     local anchor = const.PROPS[name]
-    if not anchor or slot.drawable < 0 or not Skin.hasNative("GetHashNameForProp") then return 0 end
+    if not anchor or slot.drawable < 0 or not Appearance.hasNative("GetHashNameForProp") then return 0 end
 
-    local global = Skin.collections.toGlobalProp(ped, anchor, slot.collection, slot.drawable)
+    local global = Appearance.collections.toGlobalProp(ped, anchor, slot.collection, slot.drawable)
     if not global or global < 0 then return 0 end
 
     return GetHashNameForProp(ped, anchor, global, slot.texture) or 0
@@ -56,11 +56,11 @@ local function toSlot(ped, componentType, enumValue)
     if not name or not enumValue or enumValue < 0 then return nil end
 
     if componentType == 10 then
-        Skin.log(("skipped forced decal entry (preset %s) - decorations are not components"):format(tostring(enumValue)))
+        Appearance.log(("skipped forced decal entry (preset %s) - decorations are not components"):format(tostring(enumValue)))
         return nil
     end
 
-    local collection, localIndex = Skin.collections.fromGlobalDrawable(ped, componentType, enumValue)
+    local collection, localIndex = Appearance.collections.fromGlobalDrawable(ped, componentType, enumValue)
 
     return {
         component = name,
@@ -78,7 +78,7 @@ local function toPropSlot(ped, anchor, enumValue)
         return { prop = name, collection = const.BASE_COLLECTION, drawable = -1, texture = 0 }
     end
 
-    local collection, localIndex = Skin.collections.fromGlobalProp(ped, anchor, enumValue)
+    local collection, localIndex = Appearance.collections.fromGlobalProp(ped, anchor, enumValue)
 
     return {
         prop = name,
@@ -120,7 +120,7 @@ end
 
 function clothing.forcedProps(ped, name, slot)
     local out = {}
-    if not Skin.hasNative("GetShopPedApparelForcedPropCount") or not Skin.hasNative("GetForcedProp") then
+    if not Appearance.hasNative("GetShopPedApparelForcedPropCount") or not Appearance.hasNative("GetForcedProp") then
         return out
     end
 
@@ -140,7 +140,7 @@ end
 --- Non-clipping alternative versions of other slots that go with this item.
 function clothing.variants(ped, name, slot)
     local out = {}
-    if not Skin.hasNative("GetShopPedApparelVariantComponentCount") or not Skin.hasNative("GetVariantComponent") then
+    if not Appearance.hasNative("GetShopPedApparelVariantComponentCount") or not Appearance.hasNative("GetVariantComponent") then
         return out
     end
 
@@ -170,7 +170,7 @@ end
 function clothing.resolve(ped, components, explicit)
     explicit = explicit or {}
 
-    local outComponents = Skin.path.copy(components)
+    local outComponents = Appearance.path.copy(components)
     local outProps = {}
 
     if not Config.Clothing.applyForcedComponents and not Config.Clothing.applyForcedProps then
@@ -204,7 +204,7 @@ function clothing.resolve(ped, components, explicit)
                             texture = entry.texture,
                             palette = 0
                         }
-                        Skin.log(("forced %s -> %s/%d (from %s)"):format(
+                        Appearance.log(("forced %s -> %s/%d (from %s)"):format(
                             entry.component, entry.collection, entry.drawable, name))
                     end
                 end

@@ -11,7 +11,7 @@ files {
 }
 
 -- NOTE: files are listed in dependency order and hang themselves onto the global
--- `Skin` namespace. There is no module `require` because that is an ox_lib
+-- `Appearance` namespace. There is no module `require` because that is an ox_lib
 -- feature and this resource is deliberately dependency-free.
 shared_scripts {
     "config.lua",

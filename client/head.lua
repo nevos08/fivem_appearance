@@ -1,9 +1,9 @@
-Skin = Skin or {}
+Appearance = Appearance or {}
 
-local const = Skin.const
+local const = Appearance.const
 
 local head = {}
-Skin.head = head
+Appearance.head = head
 
 --- Head blend. Must run before the overlays, otherwise they do not take on a
 --- freemode ped.

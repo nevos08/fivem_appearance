@@ -1,9 +1,9 @@
-Skin = Skin or {}
+Appearance = Appearance or {}
 
-local STATE_KEY = "nvx_skin:appearance"
+local STATE_KEY = "nvx_appearance:data"
 
 local sync = {}
-Skin.serverSync = sync
+Appearance.serverSync = sync
 
 sync.key = STATE_KEY
 
@@ -35,13 +35,13 @@ end
 --- Client reports its appearance. It is normalized here rather than trusted -
 --- collection validity cannot be checked server-side (those natives are
 --- client-only), so this is schema validation, not clothing validation.
-RegisterNetEvent("nvx_skin:sync", function(appearance)
+RegisterNetEvent("nvx_appearance:sync", function(appearance)
     local src = source
     if not sync.enabled() then return end
 
-    local normalized = Skin.schema.normalize(appearance)
+    local normalized = Appearance.schema.normalize(appearance)
     sync.set(src, normalized)
 
-    TriggerEvent("nvx_skin:appearanceChanged", src, normalized)
-    Skin.log(("stored appearance for %d"):format(src))
+    TriggerEvent("nvx_appearance:appearanceChanged", src, normalized)
+    Appearance.log(("stored appearance for %d"):format(src))
 end)

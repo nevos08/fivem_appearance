@@ -1,9 +1,9 @@
-Skin = Skin or {}
+Appearance = Appearance or {}
 
-local STATE_KEY = "nvx_skin:appearance"
+local STATE_KEY = "nvx_appearance:data"
 
 local sync = {}
-Skin.sync = sync
+Appearance.sync = sync
 
 -- Appearances received for players whose ped is not streamed in yet.
 local pending = {}
@@ -12,7 +12,7 @@ local pending = {}
 --- Needed because components, overlays and decorations do NOT replicate.
 function sync.push(appearance)
     if not Config.Sync.enabled then return end
-    TriggerServerEvent("nvx_skin:sync", appearance)
+    TriggerServerEvent("nvx_appearance:sync", appearance)
 end
 
 --- Applies a remote player's appearance to their ped.
@@ -26,11 +26,11 @@ local function applyRemote(serverId, appearance)
     local ped = GetPlayerPed(playerId)
     if not ped or ped == 0 or not DoesEntityExist(ped) then return false end
 
-    local normalized = Skin.schema.normalize(appearance)
-    local ok, reason = Skin.applyTo(ped, normalized, { skipModel = true, remote = true })
+    local normalized = Appearance.schema.normalize(appearance)
+    local ok, reason = Appearance.applyTo(ped, normalized, { skipModel = true, remote = true })
 
     if not ok then
-        Skin.log(("remote apply for %d failed: %s"):format(serverId, reason or "?"))
+        Appearance.log(("remote apply for %d failed: %s"):format(serverId, reason or "?"))
     end
 
     return ok

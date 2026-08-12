@@ -1,6 +1,6 @@
 # The appearance table
 
-Everything in `nvx_skin` is one versioned table. It is plain data - safe to `json.encode`, store, and hand back later.
+Everything in `nvx_appearance` is one versioned table. It is plain data - safe to `json.encode`, store, and hand back later.
 
 ```lua
 {
@@ -75,7 +75,7 @@ Values are exactly what the natives expect. There are no `*10` / `*100` / `/10` 
 
 ## The third parent is not in the schema
 
-`SetPedHeadBlendData` takes a third parent and a `thirdMix`. `nvx_skin` fixes those at `0` / `0.0` and does not expose them.
+`SetPedHeadBlendData` takes a third parent and a `thirdMix`. `nvx_appearance` fixes those at `0` / `0.0` and does not expose them.
 
 ## Skin parents can follow shape parents
 
@@ -96,22 +96,22 @@ The coupling is applied **on write**, in `normalize()`. Both fields are always p
 Because a partial update cannot carry `nil` (a key set to `nil` simply is not in the table), pass **`true`** or `'auto'` to clear an override:
 
 ```lua
-exports.nvx_skin:SetHairFade(false)   -- off
-exports.nvx_skin:SetHairFade(true)    -- back to the per-style default
+exports.nvx_appearance:SetHairFade(false)   -- off
+exports.nvx_appearance:SetHairFade(true)    -- back to the per-style default
 ```
 
 ## Tattoos
 
 A tattoo is the minimal triple `{ collection, male, female }`. Both hashes are stored so a **gender change keeps the tattoo** rather than dropping or mismatching it.
 
-`nvx_skin` has no tattoo catalog on purpose. Labels, zones and previews are UI concerns and belong in your character creator; the skin only carries what is needed to apply it.
+`nvx_appearance` has no tattoo catalog on purpose. Labels, zones and previews are UI concerns and belong in your character creator; the skin only carries what is needed to apply it.
 
 ## Reading from a ped
 
 `Read(ped?)` reconstructs an appearance from the ped using natives, ignoring the cache. It returns `appearance, partial`.
 
 ```lua
-local appearance, partial = exports.nvx_skin:Read()
+local appearance, partial = exports.nvx_appearance:Read()
 ```
 
-**Decorations cannot be read back** - no native enumerates them. When `nvx_skin` has no cached appearance to carry them over from, `partial` is `true` and `tattoos` is empty. Never persist a `partial = true` result over a good one.
+**Decorations cannot be read back** - no native enumerates them. When `nvx_appearance` has no cached appearance to carry them over from, `partial` is `true` and `tattoos` is empty. Never persist a `partial = true` result over a good one.

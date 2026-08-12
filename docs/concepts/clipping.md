@@ -1,12 +1,12 @@
 # Clipping and forced components
 
-Not every top works with every pair of arms. Wear the wrong combination and hands poke through sleeves, or a shirt collar clips through a jacket. GTA solves this with data it ships itself, and `nvx_skin` reads that data at runtime.
+Not every top works with every pair of arms. Wear the wrong combination and hands poke through sleeves, or a shirt collar clips through a jacket. GTA solves this with data it ships itself, and `nvx_appearance` reads that data at runtime.
 
 ## Where the data comes from
 
 Every purchasable clothing item has an entry in `SHOP_CLOTHES.meta` carrying a `forcedComponentList`, `restrictionTags` and variant lists. That is exactly what the in-game clothing store uses to avoid clipping.
 
-`nvx_skin` reads it through the shop apparel natives:
+`nvx_appearance` reads it through the shop apparel natives:
 
 1. `GetHashNameForComponent(ped, componentId, drawable, texture)` → the item's unique hash
 2. `GetShopPedApparelForcedComponentCount(hash)` → how many companion slots it forces
@@ -25,7 +25,7 @@ This is neither a hand-curated rule set nor blind guessing - it is Rockstar's ow
 With `Config.Clothing.applyForcedComponents` on (the default), setting a top pulls its arms and undershirt along:
 
 ```lua
-exports.nvx_skin:SetComponent('torso', '', 47, 0)
+exports.nvx_appearance:SetComponent('torso', '', 47, 0)
 -- arms and shirt are set to whatever GTA says belongs to drawable 47
 ```
 
@@ -35,7 +35,7 @@ exports.nvx_skin:SetComponent('torso', '', 47, 0)
 
 ```lua
 -- arms is explicit -> the forced arms are ignored
-exports.nvx_skin:SetComponents({
+exports.nvx_appearance:SetComponents({
     torso = { collection = '', drawable = 47, texture = 0 },
     arms  = { collection = '', drawable = 15, texture = 0 }
 })
@@ -48,11 +48,11 @@ Without that rule you could never deliberately deviate - which job uniforms and 
 Useful when building a clothing shop or character creator:
 
 ```lua
-local slot = exports.nvx_skin:GetComponent('torso')
+local slot = exports.nvx_appearance:GetComponent('torso')
 
-local hash = exports.nvx_skin:GetItemHash('torso', slot.collection, slot.drawable, slot.texture)
-local forced = exports.nvx_skin:GetForcedComponents('torso', slot.collection, slot.drawable, slot.texture)
-local variants = exports.nvx_skin:GetVariants('torso', slot.collection, slot.drawable, slot.texture)
+local hash = exports.nvx_appearance:GetItemHash('torso', slot.collection, slot.drawable, slot.texture)
+local forced = exports.nvx_appearance:GetForcedComponents('torso', slot.collection, slot.drawable, slot.texture)
+local variants = exports.nvx_appearance:GetVariants('torso', slot.collection, slot.drawable, slot.texture)
 
 -- forced = { { component = 'arms', collection = '', drawable = 15, texture = 0 }, ... }
 ```
@@ -60,7 +60,7 @@ local variants = exports.nvx_skin:GetVariants('torso', slot.collection, slot.dra
 `ResolveOutfit` answers "what would this outfit actually look like" without applying anything - built for previews:
 
 ```lua
-local components, props = exports.nvx_skin:ResolveOutfit({
+local components, props = exports.nvx_appearance:ResolveOutfit({
     torso = { collection = '', drawable = 47, texture = 0 }
 })
 ```
@@ -88,4 +88,4 @@ Finally: this prevents combinations Rockstar did not intend. It is not a promise
 
 ## Restricting the choices instead
 
-Everything above corrects an outfit after the fact. A character creator can use the same data the other way round - only offering the arms that fit the chosen top - by filtering its catalog on `GetItemHash` and `GetForcedComponents`. `nvx_skin` deliberately ships no catalog layer for that; it belongs in the creator.
+Everything above corrects an outfit after the fact. A character creator can use the same data the other way round - only offering the arms that fit the chosen top - by filtering its catalog on `GetItemHash` and `GetForcedComponents`. `nvx_appearance` deliberately ships no catalog layer for that; it belongs in the creator.

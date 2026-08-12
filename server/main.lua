@@ -1,8 +1,8 @@
-Skin = Skin or {}
+Appearance = Appearance or {}
 
-local const = Skin.const
-local copy = Skin.path.copy
-local sync = Skin.serverSync
+local const = Appearance.const
+local copy = Appearance.path.copy
+local sync = Appearance.serverSync
 
 -----------------------------------------------------------------------------
 -- Setters
@@ -25,7 +25,7 @@ for i = 1, #SETTERS do
 
     exports(action, function(src, ...)
         if not src then return false, "missing player source" end
-        Skin.call(src, action, ...)
+        Appearance.call(src, action, ...)
         return true
     end)
 end
@@ -47,7 +47,7 @@ local function appearanceOf(src)
         return nil, "no appearance stored"
     end
 
-    local appearance, reason = Skin.request(src, "GetAppearance")
+    local appearance, reason = Appearance.request(src, "GetAppearance")
     if not appearance then return nil, reason or "no response" end
 
     return appearance
@@ -58,7 +58,7 @@ local function slice(src, pathStr)
     if not appearance then return nil, reason end
 
     if not pathStr then return copy(appearance) end
-    return copy(Skin.path.get(appearance, pathStr))
+    return copy(Appearance.path.get(appearance, pathStr))
 end
 
 local getters = {}
@@ -77,12 +77,12 @@ function getters.GetTattoos(src) return slice(src, "tattoos") end
 
 function getters.GetSex(src)
     local model = slice(src, "model")
-    return model and Skin.schema.sexOf(model) or nil
+    return model and Appearance.schema.sexOf(model) or nil
 end
 
 function getters.IsFreemode(src)
     local model = slice(src, "model")
-    return model ~= nil and Skin.schema.isFreemode(model)
+    return model ~= nil and Appearance.schema.isFreemode(model)
 end
 
 function getters.GetFaceFeature(src, nameOrIndex)
@@ -130,12 +130,12 @@ end
 function getters.HasTattoo(src, tattoo)
     local list = slice(src, "tattoos")
     if not list then return false end
-    return Skin.tattoosIndexOf(list, tattoo) ~= nil
+    return Appearance.tattoosIndexOf(list, tattoo) ~= nil
 end
 
 --- Always a roundtrip: read straight off the ped, ignoring the statebag.
 function getters.Read(src)
-    return Skin.request(src, "Read")
+    return Appearance.request(src, "Read")
 end
 
 for name, fn in pairs(getters) do
@@ -146,7 +146,7 @@ end
 -- Shared helper (the client version lives in client/tattoos.lua)
 -----------------------------------------------------------------------------
 
-function Skin.tattoosIndexOf(list, tattoo)
+function Appearance.tattoosIndexOf(list, tattoo)
     if type(tattoo) ~= "table" or not tattoo.collection then return nil end
 
     local male = tattoo.male or tattoo.hashMale
@@ -170,6 +170,6 @@ end
 
 CreateThread(function()
     if not Config.Sync.enabled then
-        Skin.warn("sync is disabled - server-side getters will do a client roundtrip and must be called from a coroutine")
+        Appearance.warn("sync is disabled - server-side getters will do a client roundtrip and must be called from a coroutine")
     end
 end)

@@ -1,8 +1,8 @@
 -- ! DO NOT EDIT ANYTHING IF YOU DON'T KNOW WHAT YOU'RE DOING.
-Skin = Skin or {}
+Appearance = Appearance or {}
 
 local const = {}
-Skin.const = const
+Appearance.const = const
 
 const.VERSION = 1
 

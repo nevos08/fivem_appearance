@@ -1,10 +1,10 @@
-Skin = Skin or {}
+Appearance = Appearance or {}
 
-local const = Skin.const
-local path = Skin.path
+local const = Appearance.const
+local path = Appearance.path
 
 local schema = {}
-Skin.schema = schema
+Appearance.schema = schema
 
 local function clamp(value, min, max)
     if value < min then return min end

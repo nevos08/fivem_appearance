@@ -1,7 +1,7 @@
-Skin = Skin or {}
+Appearance = Appearance or {}
 
 local ped = {}
-Skin.ped = ped
+Appearance.ped = ped
 
 --- Loads a model and switches the local player to it.
 ---
