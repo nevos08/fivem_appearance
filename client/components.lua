@@ -110,13 +110,36 @@ function components.applyAll(ped, appearance, explicit)
         end
     end
 
+    -- In "reject" mode nothing may be applied unless everything validates.
+    -- Otherwise a refused value would still leave the ped half-changed, and the
+    -- caller would get no way to tell.
+    if Config.Validation == "reject" then
+        for name, slot in pairs(appearance.components) do
+            local ok, reason = Skin.collections.validateComponent(ped, name, slot)
+            if not ok then return false, ("component '%s': %s"):format(name, reason or "invalid") end
+        end
+
+        for name, slot in pairs(appearance.props) do
+            local ok, reason = Skin.collections.validateProp(ped, name, slot)
+            if not ok then return false, ("prop '%s': %s"):format(name, reason or "invalid") end
+        end
+    end
+
     for name, slot in pairs(appearance.components) do
         local ok, reason = components.applyComponent(ped, name, slot)
-        if not ok then Skin.log(("skipped component '%s': %s"):format(name, reason or "?")) end
+        if not ok then
+            -- clamp could not rescue this one (no valid texture at all, or a
+            -- missing collection with FallbackToNaked off).
+            return false, ("component '%s': %s"):format(name, reason or "invalid")
+        end
     end
 
     for name, slot in pairs(appearance.props) do
         local ok, reason = components.applyProp(ped, name, slot)
-        if not ok then Skin.log(("skipped prop '%s': %s"):format(name, reason or "?")) end
+        if not ok then
+            return false, ("prop '%s': %s"):format(name, reason or "invalid")
+        end
     end
+
+    return true
 end

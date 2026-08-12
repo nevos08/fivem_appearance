@@ -49,13 +49,18 @@ function Skin.applyTo(ped, appearance, opts)
         Skin.head.applyEyeColor(ped, appearance.eyeColor)
 
         -- 6. Hair ----------------------------------------------------------
-        local validated = Skin.hair.validate(ped, appearance.hair)
-        if validated then appearance.hair = validated end
+        local validated, hairReason = Skin.hair.validate(ped, appearance.hair)
+        if not validated then
+            if Config.Validation == "reject" then return false, hairReason end
+        else
+            appearance.hair = validated
+        end
         Skin.hair.apply(ped, appearance.hair)
     end
 
     -- 7. Components / props ---------------------------------------------
-    Skin.components.applyAll(ped, appearance, opts.explicit)
+    local ok, reason = Skin.components.applyAll(ped, appearance, opts.explicit)
+    if not ok then return false, reason end
 
     -- 8. Decorations (tattoos + hair fade) -------------------------------
     Skin.tattoos.apply(ped, appearance)
