@@ -1,0 +1,18 @@
+{
+    "$schema": "https://raw.githubusercontent.com/LuaLS/vscode-lua/master/setting/schema.json",
+    "workspace.checkThirdParty": "Ask",
+    "workspace.userThirdParty": [
+        "C:\\Users\\Leon\\Developer\\FiveM\\tools\\lua-addons"
+    ],
+    "workspace.library": [
+        "C:/Users/Leon/Developer/FiveM/tools/lua-addons/fivem-lls-addon/library"
+    ],
+    "workspace.ignoreDir": [
+        ".vscode",
+        ".git",
+        ".github",
+        "node_modules",
+        "web"
+    ],
+    "runtime.plugin": "C:/Users/Leon/Developer/FiveM/tools/lua-addons/fivem-lls-addon/plugin.lua"
+}

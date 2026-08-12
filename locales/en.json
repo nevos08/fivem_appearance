@@ -1,0 +1,16 @@
+{
+  "error.unknown_component": "Unknown component: %s",
+  "error.unknown_prop": "Unknown prop: %s",
+  "error.unknown_overlay": "Unknown overlay: %s",
+  "error.unknown_feature": "Unknown face feature: %s",
+  "error.invalid_model": "Invalid model: %s",
+  "error.model_timeout": "Model '%s' failed to load in time",
+  "error.no_ped": "Ped does not exist",
+  "error.busy": "Another apply is already running",
+  "error.timeout": "Client request timed out",
+  "error.no_appearance": "No appearance stored for this player",
+  "error.sync_disabled": "Sync is disabled",
+  "warn.collection_missing": "Collection '%s' is not present on this ped",
+  "warn.gen9_exclusive": "'%s' is Gen9-exclusive and may not render for every client",
+  "warn.native_missing": "Native '%s' is unavailable on this build"
+}

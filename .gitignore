@@ -1,0 +1,24 @@
+# Editor / OS
+.vscode/
+.idea/
+*.code-workspace
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+
+# Lua artifacts
+*.luac
+luac.out
+
+# Local overrides - config.lua is meant to be edited per server, so keep a
+# local-only variant out of the repo.
+config.local.lua
+
+# Graphify
+/graphify-out
+
+# PLAN
+PLAN.md

@@ -1,0 +1,16 @@
+{
+  "error.unknown_component": "Unbekannte Komponente: %s",
+  "error.unknown_prop": "Unbekanntes Prop: %s",
+  "error.unknown_overlay": "Unbekanntes Overlay: %s",
+  "error.unknown_feature": "Unbekanntes Gesichtsmerkmal: %s",
+  "error.invalid_model": "Ungültiges Modell: %s",
+  "error.model_timeout": "Modell '%s' konnte nicht rechtzeitig geladen werden",
+  "error.no_ped": "Ped existiert nicht",
+  "error.busy": "Es läuft bereits ein Apply-Vorgang",
+  "error.timeout": "Zeitüberschreitung bei der Client-Anfrage",
+  "error.no_appearance": "Für diesen Spieler ist kein Skin gespeichert",
+  "error.sync_disabled": "Sync ist deaktiviert",
+  "warn.collection_missing": "Collection '%s' ist auf diesem Ped nicht vorhanden",
+  "warn.gen9_exclusive": "'%s' ist Gen9-exklusiv und wird eventuell nicht für alle Clients gerendert",
+  "warn.native_missing": "Native '%s' ist auf diesem Build nicht verfügbar"
+}
