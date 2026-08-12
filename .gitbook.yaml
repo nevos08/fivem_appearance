@@ -1,0 +1,9 @@
+# GitBook Git Sync configuration.
+#
+# `root` tells GitBook that only the docs/ folder is documentation - without it
+# GitBook would try to interpret the Lua source tree as pages.
+root: ./docs/
+
+structure:
+  readme: README.md
+  summary: SUMMARY.md
