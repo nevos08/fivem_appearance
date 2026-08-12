@@ -16,10 +16,6 @@ Config.HeadBlend = {
     -- The natives allow different parents for face shape and skin tone. In
     -- practice you almost always want them identical, otherwise the skin tone
     -- does not match the face.
-    --
-    -- Coupling is applied on WRITE (Apply/Update/SetHeadBlend), never on apply.
-    -- Both values stay in the schema and are always stored and synced, so
-    -- turning this off later frees the skin fields again without data loss.
     linkSkinToParents = true,
 
     -- Additionally couple skinMix to shapeMix.
@@ -55,7 +51,7 @@ Config.Clothing = {
 -- "clamp"  - pull invalid values to the nearest valid one
 -- "reject" - discard the call and return false, reason
 -- "off"    - apply blindly (the natives fail silently, expect broken peds)
-Config.Validation = "clamp"
+Config.Validation = "reject"
 
 -- When a collection does not exist on the ped at all (addon clothing not
 -- streamed, missing DLC), fall back to the naked default instead of leaving a
