@@ -2,9 +2,9 @@
 
 ## Requirements
 
-* FiveM server, game build **2802 or newer** (collection-based natives)
-* Lua 5.4 (`lua54 'yes'`, already set in the manifest)
-* No other resources. `nvx_skin` has no dependencies.
+- FiveM server, game build **2802 or newer** (collection-based natives)
+- Lua 5.4 (`lua54 'yes'`, already set in the manifest)
+- No other resources. `nvx_skin` has no dependencies.
 
 {% hint style="info" %}
 The collection natives are **client-side and GTA5 only**. That is why the server never validates clothing itself - see [Multiplayer sync](../concepts/sync.md).
@@ -17,8 +17,6 @@ The collection natives are **client-side and GTA5 only**. That is why the server
 
 ```cfg
 ensure nvx_skin
-ensure your_multicharacter
-ensure your_charcreator
 ```
 
 3. Restart the server and check the console for startup errors.
@@ -27,12 +25,12 @@ ensure your_charcreator
 
 Set `Config.Debug = true` in `config.lua` and restart. That enables the test commands:
 
-| Command | What it does |
-| --- | --- |
-| `/nvxskin_dump` | Prints the current appearance as JSON |
-| `/nvxskin_random` | Randomises every clothing component |
-| `/nvxskin_set <path> <value>` | Partial update, e.g. `/nvxskin_set components.torso.drawable 15` |
-| `/nvxskin_collections <component>` | Lists collections holding drawables for that component |
+| Command                            | What it does                                                     |
+| ---------------------------------- | ---------------------------------------------------------------- |
+| `/nvxskin_dump`                    | Prints the current appearance as JSON                            |
+| `/nvxskin_random`                  | Randomises every clothing component                              |
+| `/nvxskin_set <path> <value>`      | Partial update, e.g. `/nvxskin_set components.torso.drawable 15` |
+| `/nvxskin_collections <component>` | Lists collections holding drawables for that component           |
 
 If `/nvxskin_dump` prints a full appearance table, the resource is working.
 

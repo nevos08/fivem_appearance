@@ -6,7 +6,11 @@ description: Ped appearance backend for FiveM - components, props, overlays, tat
 
 `nvx_skin` is the layer that applies and reads a ped's appearance. It is a **backend only** - there is no UI and no character creator. You drive it entirely through exports, from both the client and the server.
 
-It replaces `skinchanger` / `esx_skin`.
+It is an alternative to `skinchanger`, which fills the same role.
+
+{% hint style="info" %}
+It is **not** a replacement for `esx_skin`. That resource also ships a menu UI and persists to `users.skin` - `nvx_skin` does neither. You keep your own UI and your own persistence; see [Quickstart](getting-started/quickstart.md).
+{% endhint %}
 
 ## Why not skinchanger
 

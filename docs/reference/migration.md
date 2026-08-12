@@ -2,6 +2,10 @@
 
 `nvx_skin` ships **no** compatibility shim. Old calls do not work against it - they have to be rewritten. The data, however, migrates itself.
 
+{% hint style="warning" %}
+`nvx_skin` takes over the job of `skinchanger` - applying and reading appearances. It does **not** take over `esx_skin`, which additionally provides the clothing menu and saves to `users.skin`. Coming from an ESX setup you still need your own UI and your own persistence.
+{% endhint %}
+
 ## Data migrates automatically
 
 `normalize()` accepts the legacy shapes as input, so you can feed existing rows straight in:
