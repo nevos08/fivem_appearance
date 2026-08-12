@@ -290,8 +290,16 @@ function schema.normalize(input)
             h.legacy = true
         end
 
+        -- fade: false = off, table = explicit override, true/"auto" = drop the
+        -- override and fall back to the per-style lookup.
+        --
+        -- The sentinel exists because a partial update cannot carry nil: a key
+        -- set to nil simply is not in the table, so there would otherwise be no
+        -- way to clear an override once it is set.
         if hair.fade == false then
             h.fade = false
+        elseif hair.fade == true or hair.fade == "auto" then
+            h.fade = nil
         elseif type(hair.fade) == "table" and hair.fade.collection and hair.fade.overlay then
             h.fade = { collection = hair.fade.collection, overlay = hair.fade.overlay }
         end

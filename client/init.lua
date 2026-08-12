@@ -59,6 +59,20 @@ function Skin.resolveComponent(nameOrId)
     return nil, nil
 end
 
+--- Like resolveComponent, but also accepts "hair" (component 2).
+---
+--- Hair is not a clothing component in the schema - it has its own subsystem
+--- because the fade travels with it - but for variation counts, validity and
+--- index conversion it behaves like any other component, and a creator needs to
+--- be able to enumerate it.
+function Skin.resolveVariationTarget(nameOrId)
+    if nameOrId == "hair" or nameOrId == Skin.const.COMPONENT_HAIR then
+        return "hair", Skin.const.COMPONENT_HAIR
+    end
+
+    return Skin.resolveComponent(nameOrId)
+end
+
 --- Resolves "hats" / 0 to both the canonical name and the anchor point.
 function Skin.resolveProp(nameOrId)
     local const = Skin.const

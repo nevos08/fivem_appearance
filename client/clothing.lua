@@ -46,9 +46,19 @@ end
 --- `enumValue` is a GLOBAL drawable index - converting it back to
 --- collection + local index here is what keeps the stored appearance stable
 --- across title updates.
+---
+--- Except for componentType 10 (PV_COMP_DECL): there `enumValue` is a decoration
+--- PRESET HASH, not a drawable index. Writing it into the badge slot would clamp
+--- a 32-bit hash down to some arbitrary decal, so those entries are skipped.
+--- Decorations are the decoration step's job, not the component step's.
 local function toSlot(ped, componentType, enumValue)
     local name = const.COMPONENT_NAMES[componentType]
     if not name or not enumValue or enumValue < 0 then return nil end
+
+    if componentType == 10 then
+        Skin.log(("skipped forced decal entry (preset %s) - decorations are not components"):format(tostring(enumValue)))
+        return nil
+    end
 
     local collection, localIndex = Skin.collections.fromGlobalDrawable(ped, componentType, enumValue)
 

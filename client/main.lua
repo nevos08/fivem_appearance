@@ -272,17 +272,22 @@ local function IsValid(nameOrId, collection, drawable, texture)
     return exact, exact and nil or "value was corrected"
 end
 
-local function GetVariationCounts(nameOrId, collection)
+-- Numeric ids are ambiguous between components and props (1 is both `mask` and
+-- `glasses`), so components win and callers should prefer names.
+--- @param drawable number|nil texture count is per-drawable, so without this the
+---        second return value is always 0
+--- @return number drawables, number textures
+local function GetVariationCounts(nameOrId, collection, drawable)
     local ped = PlayerPedId()
 
-    local name, componentId = Skin.resolveComponent(nameOrId)
+    local name, componentId = Skin.resolveVariationTarget(nameOrId)
     if name then
-        return Skin.collections.componentCounts(ped, componentId, collection)
+        return Skin.collections.componentCounts(ped, componentId, collection, drawable)
     end
 
     local propName, anchor = Skin.resolveProp(nameOrId)
     if propName then
-        return Skin.collections.propCounts(ped, anchor, collection)
+        return Skin.collections.propCounts(ped, anchor, collection, drawable)
     end
 
     return 0, 0
@@ -293,7 +298,7 @@ local function GetCollections() return Skin.collections.list(PlayerPedId()) end
 local function ToGlobalIndex(nameOrId, collection, drawable)
     local ped = PlayerPedId()
 
-    local name, componentId = Skin.resolveComponent(nameOrId)
+    local name, componentId = Skin.resolveVariationTarget(nameOrId)
     if name then return Skin.collections.toGlobalDrawable(ped, componentId, collection, drawable) end
 
     local propName, anchor = Skin.resolveProp(nameOrId)
@@ -305,7 +310,7 @@ end
 local function FromGlobalIndex(nameOrId, globalDrawable)
     local ped = PlayerPedId()
 
-    local name, componentId = Skin.resolveComponent(nameOrId)
+    local name, componentId = Skin.resolveVariationTarget(nameOrId)
     if name then return Skin.collections.fromGlobalDrawable(ped, componentId, globalDrawable) end
 
     local propName, anchor = Skin.resolveProp(nameOrId)
@@ -318,7 +323,7 @@ end
 -- Clipping / forced components
 -----------------------------------------------------------------------------
 
-local function slotFor(nameOrId, collection, drawable, texture)
+local function slotFor(collection, drawable, texture)
     return { collection = collection or const.BASE_COLLECTION, drawable = drawable, texture = texture or 0 }
 end
 
@@ -326,10 +331,10 @@ local function GetItemHash(nameOrId, collection, drawable, texture)
     local ped = PlayerPedId()
 
     local name = Skin.resolveComponent(nameOrId)
-    if name then return Skin.clothing.itemHash(ped, name, slotFor(nameOrId, collection, drawable, texture)) end
+    if name then return Skin.clothing.itemHash(ped, name, slotFor(collection, drawable, texture)) end
 
     local propName = Skin.resolveProp(nameOrId)
-    if propName then return Skin.clothing.propItemHash(ped, propName, slotFor(nameOrId, collection, drawable, texture)) end
+    if propName then return Skin.clothing.propItemHash(ped, propName, slotFor(collection, drawable, texture)) end
 
     return 0
 end
@@ -337,19 +342,19 @@ end
 local function GetForcedComponents(nameOrId, collection, drawable, texture)
     local name = Skin.resolveComponent(nameOrId)
     if not name then return {} end
-    return Skin.clothing.forcedComponents(PlayerPedId(), name, slotFor(nameOrId, collection, drawable, texture))
+    return Skin.clothing.forcedComponents(PlayerPedId(), name, slotFor(collection, drawable, texture))
 end
 
 local function GetForcedProps(nameOrId, collection, drawable, texture)
     local name = Skin.resolveComponent(nameOrId)
     if not name then return {} end
-    return Skin.clothing.forcedProps(PlayerPedId(), name, slotFor(nameOrId, collection, drawable, texture))
+    return Skin.clothing.forcedProps(PlayerPedId(), name, slotFor(collection, drawable, texture))
 end
 
 local function GetVariants(nameOrId, collection, drawable, texture)
     local name = Skin.resolveComponent(nameOrId)
     if not name then return {} end
-    return Skin.clothing.variants(PlayerPedId(), name, slotFor(nameOrId, collection, drawable, texture))
+    return Skin.clothing.variants(PlayerPedId(), name, slotFor(collection, drawable, texture))
 end
 
 --- Resolves a component set without applying it, so a creator can preview what
