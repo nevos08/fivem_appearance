@@ -66,19 +66,11 @@ The practical effect: you can feed old `users.skin` rows or existing character-c
 
 ## Validation
 
-The collection set natives **fail silently** on an invalid index - you get an invisible or wrong ped and no error. So nothing is applied without passing validation first.
-
-`Config.Validation` controls what happens to bad input:
-
-| Mode | Behaviour |
-| --- | --- |
-| `'clamp'` (default) | Pull the value to the nearest valid one |
-| `'reject'` | Discard the call, return `false, reason` |
-| `'off'` | Apply blindly. Expect broken peds. |
+The collection set natives **fail silently** on an invalid index - you get an invisible or wrong ped and no error at all. So nothing is applied without being checked against these counts first.
 
 ```lua
 local ok, reason = exports.nvx_skin:IsValid('torso', '', 9999, 0)
 -- false, "drawable 9999 out of range (0-411) for 'torso'"
 ```
 
-If a collection is not present on the ped at all - addon clothing that is not streamed, a missing DLC - the slot falls back to the naked default rather than leaving something broken behind (`Config.FallbackToNaked`).
+How invalid values are handled - clamped, refused, or passed through - is its own topic: see [Validation](validation.md).

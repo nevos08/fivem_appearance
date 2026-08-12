@@ -11,6 +11,7 @@
 
 * [The appearance table](concepts/appearance.md)
 * [Collections and indices](concepts/collections.md)
+* [Validation](concepts/validation.md)
 * [Clipping and forced components](concepts/clipping.md)
 * [Multiplayer sync](concepts/sync.md)
 

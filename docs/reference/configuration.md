@@ -55,6 +55,8 @@ See [Clipping and forced components](../concepts/clipping.md).
 
 `'off'` is not recommended: the set natives fail silently, so invalid values produce an invisible ped with no error.
 
+Full behaviour of each mode, what gets checked, and how clamped values are written back: [Validation](../concepts/validation.md).
+
 ## Ped
 
 | Key | Default | Description |
